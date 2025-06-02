@@ -15,37 +15,55 @@
 
 ## General Information
 - This project is to fufill the requirement of Tugas Besar IF3211 Domain-Specific Computation
-- The purpose of this project is..
+- The purpose of this project is to simulate marine life in different stressor environments
 
 ## Technologies Used
 - Python - version 3.13.1
 
 ## Features
-- Lorem
+- Agent-Based Modeling: Individual organisms with realistic behaviors
+- Environmental Simulation: Dynamic temperature, pH, and oxygen conditions
+- Climate Scenarios: Stable, warming, and extreme climate change scenarios
+- Interactive Web Interface: Real-time visualization and control via Streamlit
+- Comprehensive Analysis: Population dynamics, spatial distribution, and ecosystem health metrics
+- Modular Design: Clean, extensible codebase for research applications
 
 ## Setup
-1.  Make sure to have python intalled, to check whether or not you have it installed, you can check by typing 
+1. Clone the repository
 
     ```
-    python --version
-    Python 3.13.1
+    git clone https://github.com/MarvelPangondian/Tugas-Besar-IF3211.git
+    ```
+2. Change to root project.
+
+3. Create and activate a virtual environment
+    ```
+    python -m venv .venv
+    ./.venv/scripts/activate
     ```
 
-2. Install dependencies using pip install and requirements.txt
+4. Install Dependencies
     ```
+    pip install --upgrade pip
     pip install -r requirements.txt
     ```
 
-## Usage
-- Lorem
+5. You're good to go !
 
-1. Lorem
+## Usage
+1. Run website 
+
+	```
+	streamlit run streamlit_app.py
+	```
+
+2. Access website at http://localhost:8501
 
 ## Project Status
 Project is: Ongoing
 
 ## Room for Improvement
-- Lorem
+- Improve upon marine life simulation algorithm
 
 
 ## Acknowledgements

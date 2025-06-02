@@ -108,9 +108,12 @@ class MarineEcosystemSimulation:
         agents_to_remove = []
         for agent in self.agents:
             if agent.alive:
-                agent.update()
+                offspring = agent.update()
                 if not agent.alive:
                     agents_to_remove.append(agent)
+                if offspring is not None:
+                    self.agents.append(offspring)
+                
             else:
                 agents_to_remove.append(agent)
 
@@ -125,15 +128,6 @@ class MarineEcosystemSimulation:
                 if agent.alive
             ]
         )
-
-        if self.current_step % 20 == 0:
-            phyto_agents = [a for a in self.agents if isinstance(a, Phytoplankton)]
-            if phyto_agents:
-                avg_energy = sum(a.energy for a in phyto_agents) / len(phyto_agents)
-                can_repro = sum(1 for a in phyto_agents if a.can_reproduce())
-                print(
-                    f"Step {self.current_step}: {len(phyto_agents)} phyto, avg energy: {avg_energy:.1f}, can reproduce: {can_repro}"
-                )
 
         self.environment.update_statistics(self.agents)
         step_stats = self.collect_step_statistics()

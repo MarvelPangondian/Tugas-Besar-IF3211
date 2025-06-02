@@ -33,10 +33,10 @@ class Phytoplankton(Agent):
         self.Q10 = 2.0
         self.photosynthesis_efficiency = 0.85
 
-        self.reproduction_threshold = 12
-        self.division_energy_cost = 8
-        self.reproduction_age_min = 5
-        self.reproduction_age_max = 100
+        self.reproduction_threshold = 8
+        self.division_energy_cost = 4
+        self.reproduction_age_min = 2
+        self.reproduction_age_max = 150
 
         self.base_metabolism = 0.05
         self.max_photosynthesis_rate = 4.0
@@ -190,9 +190,9 @@ class Phytoplankton(Agent):
     def update(self) -> None:
         self.basic_update()
         if not self.alive:
-            return
+            return None
         self.photosynthesize()
-        self.reproduce()
+        
         if random.random() < 0.2:
             if random.random() < 0.7:
                 optimal_pos = self.find_optimal_location(search_radius=1)
@@ -202,3 +202,5 @@ class Phytoplankton(Agent):
                 self.random_move(distance=1)
         if self.age > 200 or self.calculate_environmental_stress() > 0.9:
             self.die()
+        return self.reproduce()
+        

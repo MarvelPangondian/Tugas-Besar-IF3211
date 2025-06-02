@@ -251,6 +251,7 @@ class Zooplankton(Agent):
                 else:
                     self.random_move(distance=2)
 
-        self.reproduce()
+        offspring = self.reproduce()
         if self.age > 300 or stress_level > 0.95:
             self.die()
+        return offspring

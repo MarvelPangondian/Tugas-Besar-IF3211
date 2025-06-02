@@ -277,6 +277,7 @@ class Fish(Agent):
                     )
             else:
                 self.random_move(distance=2)
-        self.reproduce()
+        offspring = self.reproduce()
         if stress_level > 0.9 and random.random() < 0.1:
             self.die()
+        return offspring

@@ -1,0 +1,36 @@
+{
+  "climate": {
+    "stable": {
+      "fish_decline": 1.0,
+      "zoo_decline": 1.0,
+      "phyto_decline": 1.0,
+      "diversity_final": 0.0,
+      "total_survival": 0.0
+    },
+    "warming": {
+      "fish_decline": 1.0,
+      "zoo_decline": 1.0,
+      "phyto_decline": 1.0,
+      "diversity_final": 0.0,
+      "total_survival": 0.0
+    },
+    "extreme": {
+      "fish_decline": 1.0,
+      "zoo_decline": 1.0,
+      "phyto_decline": 1.0,
+      "diversity_final": 0.0,
+      "total_survival": 0.0
+    }
+  },
+  "thresholds": {
+    "fish_critical_temp": "18",
+    "zoo_critical_temp": "18",
+    "phyto_critical_temp": "18",
+    "fish_critical_ph": 6.8,
+    "zoo_critical_ph": 6.8,
+    "phyto_critical_ph": 6.8,
+    "fish_critical_oxygen": 2.0,
+    "zoo_critical_oxygen": 2.0,
+    "phyto_critical_oxygen": 2.0
+  }
+}

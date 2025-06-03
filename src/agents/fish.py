@@ -13,18 +13,22 @@ class Fish(Agent):
         super().__init__(environment, x, y, energy)
 
         # Species-specific characteristics (simulate different marine fish species)
-        self.species_type = random.choice(["temperate", "subtropical", "eurythermal"])
+        self.species_type = random.choice(
+            ["polar", "temperate", "tropical", "eurythermal"]
+        )
 
-        # Temperature tolerances
-        if self.species_type == "temperate":
-            self.optimal_temperature = random.uniform(12.0, 18.0)  # Cold-water
-            self.temp_tolerance = random.uniform(6.0, 10.0)
-        elif self.species_type == "subtropical":
-            self.optimal_temperature = random.uniform(18.0, 24.0)  # Warm-water species
+        if self.species_type == "polar":
+            self.optimal_temperature = random.uniform(0.0, 5.0)  # Cold-water
+            self.temp_tolerance = random.uniform(12.0, 17.0)
+        elif self.species_type == "temperate":
+            self.optimal_temperature = random.uniform(6.0, 18.0)  # Mid-latitude species
+            self.temp_tolerance = random.uniform(8.0, 13.0)
+        elif self.species_type == "tropical":
+            self.optimal_temperature = random.uniform(23.0, 30.0)  # Warm-water
             self.temp_tolerance = random.uniform(4.0, 8.0)
         else:
-            self.optimal_temperature = random.uniform(15.0, 20.0)
-            self.temp_tolerance = random.uniform(8.0, 12.0)
+            self.optimal_temperature = random.uniform(12.0, 24.0)
+            self.temp_tolerance = random.uniform(10.0, 18.0)
 
         # Critical thermal
         self.thermal_death_temp = (

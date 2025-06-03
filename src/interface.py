@@ -21,7 +21,6 @@ import matplotlib
 
 matplotlib.use("Agg")
 
-
 class MarineEcosystemInterface:
     """
     Streamlit-based web interface for the marine ecosystem simulation.
@@ -125,8 +124,8 @@ class MarineEcosystemInterface:
         phyto_count = st.sidebar.slider(
             "Phytoplankton", 100, 2000, 1500
         )  # Higher default
-        zoo_count = st.sidebar.slider("Zooplankton", 50, 1000, 300)  # Lower default
-        fish_count = st.sidebar.slider("Fish", 10, 500, 40)  # Much lower default
+        zoo_count = st.sidebar.slider("Zooplankton", 0, 1000, 300)  # Lower default
+        fish_count = st.sidebar.slider("Fish", 0, 500, 40)  # Much lower default
 
         # Simulation parameters
         st.sidebar.write("**Simulation Settings**")
@@ -840,6 +839,7 @@ class MarineEcosystemInterface:
 
         # Use simulation from session state
         simulation = st.session_state.simulation
+        # debug_initialization_process(simulation=simulation)
 
         # Show progress
         progress_bar = st.progress(0)

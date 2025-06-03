@@ -70,7 +70,10 @@ class MarineEcosystemSimulation:
             else:
                 y = random.randint(0, max_phyto_depth)
             energy = random.uniform(4, 8)
-            self.agents.append(Phytoplankton(self.environment, x, y, energy))
+            initial_age = random.randint(0, 150)
+            phyto = Phytoplankton(self.environment, x, y, energy)
+            phyto.age = initial_age
+            self.agents.append(phyto)
 
         phyto_depths = [
             agent.y for agent in self.agents if isinstance(agent, Phytoplankton)
@@ -109,11 +112,10 @@ class MarineEcosystemSimulation:
         for agent in self.agents:
             if agent.alive:
                 offspring = agent.update()
-                if not agent.alive:
-                    agents_to_remove.append(agent)
                 if offspring is not None:
                     self.agents.append(offspring)
-                
+                if not agent.alive:
+                    agents_to_remove.append(agent)
             else:
                 agents_to_remove.append(agent)
 

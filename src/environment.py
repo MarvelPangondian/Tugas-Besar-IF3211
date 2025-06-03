@@ -48,7 +48,8 @@ class Environment:
             depth_factor = y / self.height
             self.temperature[:, y] *= 1 - 0.3 * depth_factor
             self.oxygen[:, y] *= 1 - 0.2 * depth_factor
-            self.light[:, y] = np.exp(-2.0 * depth_factor)
+            kd = 0.25
+            self.light[:, y] = np.exp(-kd * depth_factor)
             self.ph[:, y] -= 0.1 * depth_factor
 
         self._add_spatial_variation()

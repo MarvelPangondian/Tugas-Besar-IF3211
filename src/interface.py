@@ -174,11 +174,6 @@ class MarineEcosystemInterface:
         if st.sidebar.button("🔄 Reset", use_container_width=True):
             self.reset_simulation()
 
-        # Scenario comparison
-        st.sidebar.subheader("📊 Analysis Tools")
-        if st.sidebar.button("Compare Scenarios", use_container_width=True):
-            self.run_scenario_comparison()
-
         if st.sidebar.button("🎯 Spatial Animation", use_container_width=True):
             self._create_spatial_animation(st.session_state.simulation)
 
@@ -1046,89 +1041,6 @@ class MarineEcosystemInterface:
 
         except Exception as e:
             st.error(f"Failed to create spatial animation: {e}")
-
-    def run_scenario_comparison(self):
-        """Run and compare multiple climate scenarios."""
-        if st.session_state.simulation is None:
-            st.error("No simulation configured. Please create a new simulation first.")
-            return
-
-        st.subheader("🔬 Climate Scenario Comparison")
-
-        scenarios = ["stable", "warming", "extreme"]
-        comparison_steps = st.slider("Steps per scenario", 100, 1000, 300)
-
-        if st.button("🚀 Run Comparison"):
-            results = {}
-
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-
-            for i, scenario in enumerate(scenarios):
-                status_text.text(f"Running {scenario} scenario...")
-
-                # Reset and configure for scenario
-                st.session_state.simulation.reset_simulation()
-                st.session_state.simulation.config.climate_scenario = scenario
-                st.session_state.simulation.config.max_steps = comparison_steps
-
-                # Run simulation
-                st.session_state.simulation.run_simulation(
-                    steps=comparison_steps, verbose=False
-                )
-                results[scenario] = st.session_state.simulation.get_results_dataframe()
-
-                progress_bar.progress((i + 1) / len(scenarios))
-
-            status_text.text("Generating comparison plots...")
-
-            # Create comparison visualization
-            fig = go.Figure()
-
-            colors = {"stable": "green", "warming": "orange", "extreme": "red"}
-
-            for scenario, df in results.items():
-                fig.add_trace(
-                    go.Scatter(
-                        x=df["step"],
-                        y=df["fish_count"],
-                        name=f"Fish - {scenario.title()}",
-                        line=dict(color=colors[scenario], width=3),
-                    )
-                )
-
-            fig.update_layout(
-                title="Fish Population Under Different Climate Scenarios",
-                xaxis_title="Time Steps",
-                yaxis_title="Fish Count",
-                height=500,
-            )
-
-            st.plotly_chart(
-                fig, use_container_width=True, key="scenario_comparison_chart"
-            )
-
-            # Summary statistics
-            st.subheader("📊 Scenario Summary")
-
-            summary_data = []
-            for scenario, df in results.items():
-                final_stats = df.iloc[-1]
-                summary_data.append(
-                    {
-                        "Scenario": scenario.title(),
-                        "Final Fish Count": final_stats["fish_count"],
-                        "Final Total Population": final_stats["total_agents"],
-                        "Final Diversity": f"{final_stats['shannon_diversity']:.3f}",
-                        "Final Biomass": f"{final_stats['total_biomass']:.0f}",
-                    }
-                )
-
-            summary_df = pd.DataFrame(summary_data)
-            st.table(summary_df)
-
-            status_text.text("Comparison completed!")
-            progress_bar.progress(1.0)
 
 
 def main():

@@ -17,6 +17,8 @@ class Phytoplankton(Agent):
     def __init__(self, environment, x: int, y: int, energy: float = 5):
         super().__init__(environment, x, y, energy)
 
+        self.max_energy_storage = energy * 6
+
         # Assign one of several phytoplankton types, which affect physiology
         self.phyto_type = random.choice(
             ["diatom", "dinoflagellate", "coccolithophore", "flagellate"]
@@ -48,7 +50,7 @@ class Phytoplankton(Agent):
         # Energy conversion and capacity
         self.photosynthetic_efficiency = random.uniform(0.08, 0.15)
         self.max_energy_storage = energy * 4
-        self.maintenance_respiration = 0.02
+        self.maintenance_respiration = 0.01  # maintenance v2
 
         # Reproduction thresholds and energy cost
         self.division_energy_threshold = 3
@@ -74,10 +76,10 @@ class Phytoplankton(Agent):
         self.optimal_light_level = random.uniform(50, 200)
         self.migration_energy_cost = 0.01
 
-        # Mortality characteristics
-        self.max_lifespan = random.randint(30, 100)
-        self.viral_lysis_rate = 0.14
-        self.senescence_age = self.max_lifespan * 0.7
+        # Mortality characteristics - v2
+        self.max_lifespan = random.randint(60, 150)  # Increase from 30-100
+        self.viral_lysis_rate = 0.02  # Reduce from 0.14 to 2%
+        self.senescence_age = self.max_lifespan * 0.8  # Increase from 0.7
 
         # Nutrient limitation threshold for growth suppression
         self.nutrient_limitation_threshold = 0.3
@@ -424,10 +426,8 @@ class Phytoplankton(Agent):
 
         # Mortality processes
 
-        # 1. Viral lysis (major cause of phytoplankton mortality)
-        if (
-            random.random() < self.viral_lysis_rate / 100
-        ):  # Convert daily rate to per-time-step
+        # 1. Viral lysis (major cause of phytoplankton mortality) - v2
+        if random.random() < self.viral_lysis_rate / 500:  # Change from /100 to /500
             self.die()
             return offspring
 
@@ -436,30 +436,28 @@ class Phytoplankton(Agent):
             senescence_mortality = (
                 (self.age - self.senescence_age)
                 / (self.max_lifespan - self.senescence_age)
-            ) * 0.1
+            ) * 0.05  # Reduce from 0.1 to 0.05
             if random.random() < senescence_mortality:
                 self.die()
                 return offspring
 
-        # 3. Stress-induced mortality
+        # 3. Stress-induced mortality - v2
         stress = self.calculate_environmental_stress()
-        if stress > 0.8:
-            stress_mortality = (
-                stress - 0.8
-            ) * 0.25  # Up to 25% mortality under severe stress
+        if stress > 0.9:  # Increase threshold from 0.8 to 0.9
+            stress_mortality = (stress - 0.9) * 0.1  # Reduce from 0.25 to 0.1
             if random.random() < stress_mortality:
                 self.die()
                 return offspring
 
-        # 4. Energy depletion mortality
-        if self.energy < 0.5:
-            if random.random() < 0.1:  # 10% chance of death when energy very low
+        # 4. Energy depletion mortality - v2
+        if self.energy < 0.2:  # Reduce threshold from 0.5 to 0.2
+            if random.random() < 0.05:  # Reduce from 0.1 to 0.05
                 self.die()
                 return offspring
 
-        # 5. Light limitation mortality (prolonged darkness)
+        # 5. Light limitation mortality (prolonged darkness) - v2
         if irradiance < self.I_comp:
-            if random.random() < 0.02:  # 2% daily mortality in darkness
+            if random.random() < 0.01:  # Reduce from 0.02 to 0.01
                 self.die()
                 return offspring
 

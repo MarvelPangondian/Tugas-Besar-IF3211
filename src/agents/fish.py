@@ -11,6 +11,8 @@ class Fish(Agent):
 
     def __init__(self, environment, x: int, y: int, energy: float = 25):
         super().__init__(environment, x, y, energy)
+        
+        self.max_energy = energy * 2
 
         # Species-specific characteristics (simulate different marine fish species)
         self.species_type = random.choice(
@@ -77,10 +79,10 @@ class Fish(Agent):
         self.spawning_interval = random.randint(3, 14) if self.batch_spawning else 365
         self.last_spawning_time = -self.spawning_interval
 
-        # Metabolic parameters with Q10 temperature scaling
-        self.base_metabolism = random.uniform(0.08, 0.15)
+        # Metabolic parameters with Q10 temperature scaling - v2
+        self.base_metabolism = random.uniform(0.12, 0.20)
         self.q10_metabolism = random.uniform(2.0, 2.8)  # Q10 for fish metabolism
-        self.movement_cost = random.uniform(0.04, 0.08)
+        self.movement_cost = random.uniform(0.06, 0.12)
         self.max_movement_distance = random.randint(2, 5)
 
         # Behavioral parameters based on fish behavioral ecology

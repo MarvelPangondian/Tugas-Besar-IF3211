@@ -78,9 +78,6 @@ class MarineEcosystemSimulation:
         phyto_depths = [
             agent.y for agent in self.agents if isinstance(agent, Phytoplankton)
         ]
-        print(
-            f"Phytoplankton depths: min={min(phyto_depths)}, max={max(phyto_depths)}, avg={np.mean(phyto_depths):.1f}"
-        )
 
         max_zoo_depth = int(self.environment.height * 0.4)
         for _ in range(self.config.initial_zooplankton):

@@ -11,6 +11,7 @@
   - [Usage](#usage)
   - [Project Status](#project-status)
   - [Room for Improvement](#room-for-improvement)
+  - [Deployment](#deployment)
   - [Acknowledgements](#acknowledgements)
 
 ## General Information
@@ -65,6 +66,8 @@ Project is: Ongoing
 ## Room for Improvement
 - Improve upon marine life simulation algorithm
 
+## Deployment
+Check out our simulation [here](https://tugas-besar-if3211.streamlit.app/)
 
 ## Acknowledgements
 Nama : Maximilian Sulistiyo</br>

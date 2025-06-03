@@ -68,6 +68,7 @@ class Environment:
         self.oxygen = np.clip(self.oxygen, 0, 12)
 
     def update_environment(self, climate_scenario: str = "stable") -> None:
+        """Enhanced environment update with realistic climate change effects."""
         self.time += 1
 
         if climate_scenario == "warming":
@@ -75,17 +76,132 @@ class Environment:
         elif climate_scenario == "extreme":
             self._apply_extreme_scenario()
 
+        self._apply_synergistic_effects(climate_scenario)
+
+        # Apply tipping point effects (NEW)
+        self._check_tipping_points()
+
         self._enforce_environmental_bounds()
 
     def _apply_warming_scenario(self) -> None:
-        self.temperature += 0.01
-        self.ph -= 0.001
-        self.oxygen -= 0.005
+        """Realistic IPCC warming scenario - moderate but significant change."""
+
+        base_temp_increase = 0.08
+        base_ph_decrease = 0.008
+        base_oxygen_decrease = 0.04
+
+        # Add spatial variation - some areas warm faster
+        for x in range(self.width):
+            for y in range(self.height):
+                # Surface waters warm faster
+                depth_factor = 1.0 + (y / self.height) * 0.5  # 1.0 to 1.5x
+
+                # Add regional variation (some areas more affected)
+                regional_factor = 1.0 + 0.3 * np.sin(x / self.width * np.pi)
+
+                temp_increase = base_temp_increase * depth_factor * regional_factor
+                ph_decrease = base_ph_decrease * depth_factor
+                oxygen_decrease = base_oxygen_decrease * depth_factor
+
+                self.temperature[x, y] += temp_increase
+                self.ph[x, y] -= ph_decrease
+                self.oxygen[x, y] -= oxygen_decrease
 
     def _apply_extreme_scenario(self) -> None:
-        self.temperature += 0.03
-        self.ph -= 0.003
-        self.oxygen -= 0.01
+        """Extreme climate change - worst case scenario."""
+        # Even more dramatic changes representing climate breakdown
+
+        base_temp_increase = 0.15
+        base_ph_decrease = 0.015
+        base_oxygen_decrease = 0.08
+
+        # extreme spatial variation
+        for x in range(self.width):
+            for y in range(self.height):
+                # Extreme surface warming
+                depth_factor = 1.0 + (y / self.height) * 1.0  # 1.0 to 2.0x
+
+                # Extreme regional variation
+                regional_factor = 1.0 + 0.6 * np.sin(x / self.width * np.pi)
+
+                # Add periodic heat waves (NEW)
+                if self.time % 20 < 5:
+                    heat_wave_factor = 2.0
+                else:
+                    heat_wave_factor = 1.0
+
+                temp_increase = (
+                    base_temp_increase
+                    * depth_factor
+                    * regional_factor
+                    * heat_wave_factor
+                )
+                ph_decrease = base_ph_decrease * depth_factor
+                oxygen_decrease = base_oxygen_decrease * depth_factor
+
+                self.temperature[x, y] += temp_increase
+                self.ph[x, y] -= ph_decrease
+                self.oxygen[x, y] -= oxygen_decrease
+
+    def _apply_synergistic_effects(self, climate_scenario: str) -> None:
+        """Apply synergistic effects where multiple stressors amplify each other."""
+        if climate_scenario == "stable":
+            return
+
+        for x in range(self.width):
+            for y in range(self.height):
+                temp = self.temperature[x, y]
+                ph = self.ph[x, y]
+                oxygen = self.oxygen[x, y]
+
+                # High temperature reduces oxygen solubility (real physical effect)
+                if temp > 25:
+                    oxygen_loss = (temp - 25) * 0.02
+                    self.oxygen[x, y] -= oxygen_loss
+
+                # Low pH + high temp = deadly combination for marine life
+                if ph < 7.5 and temp > 23:
+                    self.temperature[x, y] += 0.02
+
+                # Hypoxia + acidification creates dead zones
+                if oxygen < 3.0 and ph < 7.8:
+                    self.oxygen[x, y] -= 0.05
+
+    def _check_tipping_points(self) -> None:
+        """Check for environmental tipping points and cascade effects."""
+
+        avg_temp = np.mean(self.temperature)
+        avg_ph = np.mean(self.ph)
+        avg_oxygen = np.mean(self.oxygen)
+
+        # Temperature tipping point - marine heatwave
+        if avg_temp > 28:
+            self.temperature += 0.05
+
+        # Acidification tipping point - chemistry cascade
+        if avg_ph < 7.0:
+            self.ph -= 0.01
+
+        # Hypoxia tipping point - dead zone expansion
+        if avg_oxygen < 2.0:
+            # Hypoxia begets more hypoxia due to ecosystem collapse
+            self.oxygen -= 0.02
+
+    def calculate_climate_vulnerability_multiplier(
+        self, stress_level: float, climate_scenario: str
+    ) -> float:
+        """Calculate how climate change amplifies stress effects."""
+
+        if climate_scenario == "stable":
+            return 1.0
+        elif climate_scenario == "warming":
+            # Moderate amplification
+            return 1.0 + stress_level * 0.5  # Up to 1.5x mortality
+        elif climate_scenario == "extreme":
+            # Severe amplification - climate refugees
+            return 1.0 + stress_level * 1.2  # Up to 2.2x mortality
+
+        return 1.0
 
     def _enforce_environmental_bounds(self) -> None:
         self.temperature = np.clip(self.temperature, -2, 40)

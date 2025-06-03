@@ -839,7 +839,6 @@ class MarineEcosystemInterface:
 
         # Use simulation from session state
         simulation = st.session_state.simulation
-        # debug_initialization_process(simulation=simulation)
 
         # Show progress
         progress_bar = st.progress(0)
@@ -848,11 +847,20 @@ class MarineEcosystemInterface:
         start_time = time.time()
 
         try:
+            initial_stats = simulation.collect_step_statistics()
+            initial_stats["step"] = 0
+            simulation.detailed_stats.append(initial_stats)
+            simulation.environmental_history.append(simulation.environment.get_environmental_summary())
+            simulation.current_step = 1
+
+            
+            print(f"🔍 Initial state: {initial_stats['phytoplankton_count']} phytoplankton")
+
             # Run simulation with progress updates
             total_steps = simulation.config.max_steps
 
             for step in range(total_steps):
-                simulation.run_step()
+                simulation.run_step()  # This calls the simulation.py run_step method
 
                 # Update progress
                 progress = (step + 1) / total_steps

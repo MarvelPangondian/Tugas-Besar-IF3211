@@ -217,6 +217,11 @@ class MarineEcosystemSimulation:
             print(f"Climate scenario: {self.config.climate_scenario}")
             print(f"Running for {steps} steps...")
 
+        initial_stats = self.collect_step_statistics()
+        # print("this is the inital stats",initial_stats)
+        initial_stats["step"] = 0
+        self.detailed_stats.append(initial_stats)
+
         try:
             for step in range(steps):
                 stats = self.run_step()
